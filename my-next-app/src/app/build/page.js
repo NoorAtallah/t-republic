@@ -502,7 +502,7 @@ const TRepublikMenu = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            Layer by layer, create a drink that's uniquely yours. Choose your base, add your flavors, 
+            Layer by layer, create a drink that is uniquely yours. Choose your base, add your flavors, 
             and watch your creation come to life.
           </motion.p>
         </div>
