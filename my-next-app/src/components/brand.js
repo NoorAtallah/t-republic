@@ -200,7 +200,7 @@ const TRepublikBrandStory = () => {
           </h2>
           <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
             T-Republik brings the authentic bubble tea experience to Turkey with a modern twist. 
-            We're not just serving drinks – we're creating a community where premium meets passion.
+            We are not just serving drinks – we are creating a community where premium meets passion.
           </p>
           <div className="text-3xl font-bold text-[#6f837a] drop-shadow-[0_0_15px_#6f837a] italic">
             "refreshments reimagined"®
@@ -381,7 +381,7 @@ const TRepublikBrandStory = () => {
                 Join the <span className="text-[#6f837a] drop-shadow-[0_0_15px_#6f837a]">T-Republik</span> Experience
               </h3>
               <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-                Be part of Turkey's premium bubble tea revolution. Where tradition meets innovation, and every sip tells a story.
+                Be part of Turkey&apos;s premium bubble tea revolution. Where tradition meets innovation, and every sip tells a story.
               </p>
               <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
                 <button className="group relative bg-gradient-to-r from-[#6f837a] to-[#5a6d63] text-white px-8 py-4 rounded-full text-lg font-bold hover:from-[#5a6d63] hover:to-[#6f837a] transition-all duration-500 transform hover:scale-105 shadow-xl hover:shadow-[#6f837a]/40 overflow-hidden">

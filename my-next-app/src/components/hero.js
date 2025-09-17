@@ -344,7 +344,7 @@ const BubbleTeaHero = () => {
                     </div>
                   </div>
                   <p className="text-sm md:text-lg text-gray-200 italic mb-4 leading-relaxed">
-                    "The bubble tea here is absolutely incredible! Fresh ingredients, perfect sweetness, and the tapioca pearls have the perfect chewy texture. It's become my daily obsession!"
+                    "The bubble tea here is absolutely incredible! Fresh ingredients, perfect sweetness, and the tapioca pearls have the perfect chewy texture. It is become my daily obsession!"
                   </p>
                   <div className="flex items-center justify-center space-x-3">
                     <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-800 rounded-full flex items-center justify-center border border-[#6f837a]/50 shadow-[0_0_8px_#6f837a]">
