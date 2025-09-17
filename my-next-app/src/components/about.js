@@ -19,7 +19,7 @@ const BubbleTeaMenuSection = () => {
       subtitle: "Our legendary bestsellers",
       description: "Time-tested recipes perfected over years. Premium tea leaves with our secret blend of milk and signature toppings.",
       price: "From $4.99",
-      image: "/api/placeholder/300/200",
+      image: "/images/5.png",
       icon: Award,
       gradient: "from-[#6f837a] to-[#5a6d63]",
       specialties: ["Brown Sugar", "Classic Milk Tea", "Taro Supreme"],
@@ -32,7 +32,7 @@ const BubbleTeaMenuSection = () => {
       subtitle: "Fresh tropical explosions",
       description: "Real fruit pieces blended with premium teas. Refreshing, vibrant, and bursting with natural flavors.",
       price: "From $5.49",
-      image: "/api/placeholder/300/200",
+      image: "/images/6.png",
       icon: Sparkles,
       gradient: "from-[#7a6f83] to-[#635a6d]",
       specialties: ["Mango Passion", "Berry Blast", "Citrus Storm"],
@@ -45,7 +45,7 @@ const BubbleTeaMenuSection = () => {
       subtitle: "Caffeinated perfection",
       description: "Double-shot espresso meets creamy textures. Perfect for that extra kick when you need it most.",
       price: "From $6.99",
-      image: "/api/placeholder/300/200",
+      image: "/images/7.png",
       icon: Zap,
       gradient: "from-[#83756f] to-[#6d635a]",
       specialties: ["Coffee Boba", "Mocha Fusion", "Espresso Cream"],
@@ -173,10 +173,24 @@ const BubbleTeaMenuSection = () => {
                        style={{background: `linear-gradient(135deg, ${category.gradient.split(' ')[1]}/10, ${category.gradient.split(' ')[3]}/5)`}}></div>
                   
                   {/* Image placeholder with neon border */}
+                {/* Image with neon border */}
                   <div className="relative h-48 bg-gradient-to-br from-gray-800 to-gray-700 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br opacity-80" 
                          style={{background: `linear-gradient(135deg, ${category.gradient.split(' ')[1]}/30, ${category.gradient.split(' ')[3]}/10)`}}></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
+                    
+                    {/* Try to load image, fallback to icon */}
+                    <img 
+                      src={category.image} 
+                      alt={category.title}
+                      className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    
+                    {/* Fallback icon (hidden by default) */}
+                    <div className="absolute inset-0 flex items-center justify-center" style={{display: 'none'}}>
                       <IconComponent className="w-16 h-16 text-gray-400 group-hover:text-[#6f837a] transition-colors duration-500 drop-shadow-[0_0_20px_currentColor]" />
                     </div>
                     

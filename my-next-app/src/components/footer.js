@@ -98,7 +98,7 @@ const Footer = () => {
                 <MapPin className="w-5 h-5 text-[#6f837a] mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-gray-300 text-sm font-medium">Visit Us</p>
-                  <p className="text-gray-400 text-sm">123 Tea Street<br />Downtown District</p>
+                  <p className="text-gray-400 text-sm">Bostanlı mahallesi, cengiz kocatoros sokak, No55/a , karşıyaka İzmir</p>
                 </div>
               </div>
               
@@ -106,7 +106,7 @@ const Footer = () => {
                 <Phone className="w-5 h-5 text-[#6f837a] mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-gray-300 text-sm font-medium">Call Us</p>
-                  <p className="text-gray-400 text-sm">(555) 123-BUBBLE</p>
+                  <p className="text-gray-400 text-sm">+90 531 990 26 69</p>
                 </div>
               </div>
               
