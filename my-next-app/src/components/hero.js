@@ -214,7 +214,7 @@ const BubbleTeaHero = () => {
                 
                 {/* Main 3D Bubble Tea - Using img with proper attributes */}
                 <img 
-                  ref={heroImageRef}
+                 
                   src="/images/1.png"
                   alt="Premium Bubble Tea 3D"
                   width={520}
