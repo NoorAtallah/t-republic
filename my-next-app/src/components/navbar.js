@@ -39,7 +39,7 @@ const Navigation = () => {
               <h1 className="text-lg md:text-xl font-black text-white">
                 REPUBLIK
                 <span className="block text-[#6f837a] text-sm md:text-base leading-none drop-shadow-[0_0_8px_#6f837a]">
-                 immersive experience
+                 Immersive Experience
                 </span>
               </h1>
             </div>

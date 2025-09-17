@@ -41,7 +41,7 @@ const Footer = () => {
                 <h3 className="text-xl font-black text-white">
                   REPUBLIK
                   <span className="block text-[#6f837a] text-base leading-none drop-shadow-[0_0_8px_#6f837a]">
-                    immersive experience
+                    Immersive Experience
                   </span>
                 </h3>
               </div>
