@@ -13,10 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "REPUBLIK",
+  title: "TREPUBLIK",
   description: "Immersive Experience",
    icons: {
-    icon: '/images/4.png',sizes: '32x32',
+    icon: '/images/8.jpeg',sizes: '32x32',
    }
 };
 
