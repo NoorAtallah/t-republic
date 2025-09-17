@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { Coffee, Star, Heart, Zap, ArrowRight, Award, Sparkles } from 'lucide-react';
@@ -213,11 +212,13 @@ const BubbleTeaHero = () => {
                 {/* Neon backdrop glow */}
                 <div className="absolute inset-0 bg-gradient-radial from-[#6f837a]/30 via-[#6f837a]/10 to-transparent rounded-full scale-150 blur-3xl animate-pulse"></div>
                 
-                {/* Main 3D Bubble Tea */}
+                {/* Main 3D Bubble Tea - Using img with proper attributes */}
                 <img 
-                  
+                  ref={heroImageRef}
                   src="/images/1.png"
                   alt="Premium Bubble Tea 3D"
+                  width={520}
+                  height={750}
                   className="w-[280px] h-[400px] sm:w-[350px] sm:h-[500px] md:w-[420px] md:h-[600px] lg:w-[520px] lg:h-[750px] object-contain mx-auto filter drop-shadow-[0_0_30px_#6f837a] relative z-10"
                 />
                 
@@ -344,7 +345,7 @@ const BubbleTeaHero = () => {
                     </div>
                   </div>
                   <p className="text-sm md:text-lg text-gray-200 italic mb-4 leading-relaxed">
-                    "The bubble tea here is absolutely incredible! Fresh ingredients, perfect sweetness, and the tapioca pearls have the perfect chewy texture. It is become my daily obsession!"
+                    &ldquo;The bubble tea here is absolutely incredible! Fresh ingredients, perfect sweetness, and the tapioca pearls have the perfect chewy texture. It&apos;s become my daily obsession!&rdquo;
                   </p>
                   <div className="flex items-center justify-center space-x-3">
                     <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-800 rounded-full flex items-center justify-center border border-[#6f837a]/50 shadow-[0_0_8px_#6f837a]">

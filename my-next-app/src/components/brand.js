@@ -137,7 +137,7 @@ const TRepublikBrandStory = () => {
     }, 4000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [brandValues.length]); // Fixed: Added missing dependency
 
   // Floating animations
   useEffect(() => {
@@ -203,7 +203,7 @@ const TRepublikBrandStory = () => {
             We are not just serving drinks – we are creating a community where premium meets passion.
           </p>
           <div className="text-3xl font-bold text-[#6f837a] drop-shadow-[0_0_15px_#6f837a] italic">
-            "refreshments reimagined"®
+            &ldquo;refreshments reimagined&rdquo;®
           </div>
         </div>
 
