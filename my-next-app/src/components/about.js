@@ -44,9 +44,10 @@ const IngredientsStorySection = () => {
       const newScrollY = window.scrollY;
       setScrollY(newScrollY);
       
-      const heroHeight = window.innerHeight * 3; // Height of previous hero section
+      const heroHeight = typeof window !== 'undefined' ? window.innerHeight * 3 : 3000;
       const sectionStart = heroHeight;
-      const sectionHeight = window.innerHeight;
+      const sectionHeight = typeof window !== 'undefined' ? window.innerHeight : 1000;
+
       
       if (newScrollY >= sectionStart) {
         const adjustedScrollY = newScrollY - sectionStart;

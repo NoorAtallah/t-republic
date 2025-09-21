@@ -13,21 +13,21 @@ const RefreshingBubbleTeaScroll = () => {
       name: 'CLASSIC',
       subtitle: 'Traditional Milk Tea',
       description: 'Rich black tea with creamy milk and signature tapioca pearls',
-      productImage: '/api/placeholder/500/700'
+      productImage: '/images/5.png'
     },
     {
       id: 1,
       name: 'TARO',
       subtitle: 'Purple Signature',
       description: 'Creamy taro root with vanilla notes and crystal pearls',
-      productImage: '/api/placeholder/500/700'
+      productImage: '/images/6.png'
     },
     {
       id: 2,
       name: 'MATCHA',
       subtitle: 'Premium Japanese',
       description: 'Ceremonial grade matcha with oat milk and grass jelly',
-      productImage: '/api/placeholder/500/700'
+      productImage: '/images/7.png'
     }
   ];
 
