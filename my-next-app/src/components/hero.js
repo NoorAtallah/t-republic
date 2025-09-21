@@ -1,418 +1,312 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
-import { Coffee, Star, Heart, Zap, ArrowRight, Award, Sparkles } from 'lucide-react';
 
-const BubbleTeaHero = () => {
-  const containerRef = useRef(null);
-  const heroImageRef = useRef(null);
-  const titleRef = useRef(null);
-  const leftCardsRef = useRef([]);
-  const rightCardsRef = useRef([]);
-  const mobileCardsRef = useRef([]);
-  const particlesRef = useRef([]);
-  const splashesRef = useRef([]);
-  const credentialsRef = useRef(null);
-  const testimonialRef = useRef(null);
-  const ctaRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
+import React, { useState, useEffect, useRef } from 'react';
 
-  const drinkCategories = [
+const RefreshingBubbleTeaScroll = () => {
+  const [scrollY, setScrollY] = useState(0);
+  const [currentProduct, setCurrentProduct] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const products = [
     {
-      title: "Classic Milk Teas",
-      subtitle: "Traditional flavors, modern twist",
-      description: "Premium black tea with creamy milk and chewy tapioca pearls. Choose from original, taro, or matcha variations.",
-      stats: { value: "50+", label: "Flavor Combos" },
-      icon: Coffee,
-      specialties: ["Original", "Taro", "Matcha", "Thai"]
+      id: 0,
+      name: 'CLASSIC',
+      subtitle: 'Traditional Milk Tea',
+      description: 'Rich black tea with creamy milk and signature tapioca pearls',
+      productImage: '/api/placeholder/500/700'
     },
     {
-      title: "Fruit Tea Blends",
-      subtitle: "Fresh fruits meet quality tea",
-      description: "Refreshing fruit teas with real fruit pieces, perfect balance of sweet and tangy with popping boba options.",
-      stats: { value: "25+", label: "Fresh Fruits" },
-      icon: Star,
-      specialties: ["Mango", "Strawberry", "Passion Fruit"]
+      id: 1,
+      name: 'TARO',
+      subtitle: 'Purple Signature',
+      description: 'Creamy taro root with vanilla notes and crystal pearls',
+      productImage: '/api/placeholder/500/700'
     },
     {
-      title: "Premium Specials",
-      subtitle: "Signature crafted beverages",
-      description: "Our chef's special creations with premium ingredients, brown sugar, cheese foam, and artisanal toppings.",
-      stats: { value: "15+", label: "Signature Drinks" },
-      icon: Heart,
-      specialties: ["Brown Sugar", "Cheese Foam", "Specialty", "Limited"]
-    },
-    {
-      title: "Custom Creations",
-      subtitle: "Build your perfect drink",
-      description: "Customize sweetness, ice level, and choose from 8+ topping options including tapioca, jelly, and popping boba.",
-      stats: { value: "200+", label: "Combinations" },
-      icon: Zap,
-      specialties: ["Custom Sweet", "Ice Options", "8+ Toppings"]
+      id: 2,
+      name: 'MATCHA',
+      subtitle: 'Premium Japanese',
+      description: 'Ceremonial grade matcha with oat milk and grass jelly',
+      productImage: '/api/placeholder/500/700'
     }
   ];
 
   useEffect(() => {
-    setIsVisible(true);
-    
-    // Simulate GSAP-like animations with CSS transitions
-    const animateElements = () => {
-      // Animate particles
-      particlesRef.current.forEach((particle, index) => {
-        if (particle) {
-          particle.style.transition = `all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) ${index * 0.1}s`;
-          particle.style.opacity = '0.8';
-          particle.style.transform = 'scale(1) rotate(180deg)';
-        }
-      });
-
-      // Animate splashes
-      splashesRef.current.forEach((splash, index) => {
-        if (splash) {
-          splash.style.transition = `all 0.6s ease-out ${index * 0.05}s`;
-          splash.style.opacity = '0.6';
-          splash.style.transform = 'scale(1)';
-        }
-      });
-
-      // Animate cards
-      setTimeout(() => {
-        [...leftCardsRef.current, ...rightCardsRef.current, ...mobileCardsRef.current].forEach((card, index) => {
-          if (card) {
-            card.style.transition = `all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${index * 0.08}s`;
-            card.style.opacity = '1';
-            card.style.transform = 'translateX(0) translateY(0) rotate(0deg) scale(1)';
-          }
-        });
-      }, 400);
+    const handleScroll = () => {
+      const newScrollY = window.scrollY;
+      setScrollY(newScrollY);
+      
+      const sectionHeight = window.innerHeight;
+      const newProductIndex = Math.min(
+        Math.floor(newScrollY / sectionHeight),
+        products.length - 1
+      );
+      
+      if (newProductIndex !== currentProduct) {
+        setIsTransitioning(true);
+        setCurrentProduct(newProductIndex);
+        setTimeout(() => setIsTransitioning(false), 1200);
+      }
     };
 
-    const timer = setTimeout(animateElements, 100);
-    return () => clearTimeout(timer);
-  }, []);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [currentProduct, products.length]);
 
-  // Continuous floating animations
-  useEffect(() => {
-    const floatingElements = [...particlesRef.current, heroImageRef.current].filter(Boolean);
-    
-    floatingElements.forEach((element, index) => {
-      if (element) {
-        const animate = () => {
-          element.style.animation = `float ${3 + index * 0.5}s ease-in-out infinite ${index * 0.2}s`;
-        };
-        animate();
-      }
-    });
-  }, [isVisible]);
+  const sectionHeight = window.innerHeight;
+  const sectionProgress = (scrollY % sectionHeight) / sectionHeight;
+  
+  const bubblePositions = Array.from({ length: 20 }, (_, i) => ({
+    x: 5 + (i * 7) % 90,
+    y: 5 + (i * 11) % 90,
+    size: 4 + (i % 5) * 3,
+    speed: 0.3 + (i % 4) * 0.2
+  }));
+
+  const product = products[currentProduct];
+  const imageScale = isTransitioning ? 0.9 : 1 + (sectionProgress * 0.05);
+  const imageY = Math.sin(scrollY * 0.008) * 15;
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 relative overflow-hidden">
-      {/* Neon glowing particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div ref={el => particlesRef.current[0] = el} className="absolute top-20 left-20 w-3 h-3 bg-[#6f837a] rounded-full shadow-[0_0_20px_#6f837a] opacity-0 scale-0"></div>
-        <div ref={el => particlesRef.current[1] = el} className="absolute top-40 right-32 w-2 h-2 bg-[#6f837a] rounded-full shadow-[0_0_15px_#6f837a] opacity-0 scale-0"></div>
-        <div ref={el => particlesRef.current[2] = el} className="absolute bottom-40 left-40 w-4 h-4 bg-[#6f837a] rounded-full shadow-[0_0_25px_#6f837a] opacity-0 scale-0"></div>
-        <div ref={el => particlesRef.current[3] = el} className="absolute bottom-60 right-20 w-2.5 h-2.5 bg-[#6f837a] rounded-full shadow-[0_0_18px_#6f837a] opacity-0 scale-0"></div>
-      </div>
-
-      {/* Liquid splash effects */}
-      <div className="absolute inset-0">
-        <div ref={el => splashesRef.current[0] = el} className="absolute top-32 left-16 w-32 h-2 bg-gradient-to-r from-[#6f837a]/50 to-transparent rounded-full blur-sm opacity-0 scale-0"></div>
-        <div ref={el => splashesRef.current[1] = el} className="absolute top-32 left-16 w-2 h-32 bg-gradient-to-b from-[#6f837a]/50 to-transparent rounded-full blur-sm opacity-0 scale-0"></div>
-        <div ref={el => splashesRef.current[2] = el} className="absolute bottom-32 right-16 w-32 h-2 bg-gradient-to-l from-[#6f837a]/50 to-transparent rounded-full blur-sm opacity-0 scale-0"></div>
-        <div ref={el => splashesRef.current[3] = el} className="absolute bottom-32 right-16 w-2 h-32 bg-gradient-to-t from-[#6f837a]/50 to-transparent rounded-full blur-sm opacity-0 scale-0"></div>
-        
-        {/* Bubble splash effects */}
-        <div ref={el => splashesRef.current[4] = el} className="absolute top-1/4 left-1/4 w-16 h-16 border-2 border-[#6f837a]/40 rounded-full opacity-0 scale-0"></div>
-        <div ref={el => splashesRef.current[5] = el} className="absolute bottom-1/3 right-1/4 w-12 h-12 border-2 border-[#6f837a]/30 rounded-full opacity-0 scale-0"></div>
-      </div>
-
-      {/* Premium badge */}
-      <div ref={credentialsRef} className={`absolute top-4 right-4 md:top-8 md:right-8 z-20 transition-all duration-1000 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-      }`}>
-        {/* <div className="flex items-center space-x-3 md:space-x-6">
-          <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm text-gray-300 font-medium">
-            <Award className="w-3 h-3 md:w-4 md:h-4 text-[#6f837a] drop-shadow-[0_0_8px_#6f837a]" />
-            <span className="hidden sm:inline">Premium Quality</span>
-          </div>
-          <div className="flex items-center space-x-1 md:space-x-2 text-xs md:text-sm text-gray-300 font-medium">
-            <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-[#6f837a] drop-shadow-[0_0_8px_#6f837a]" />
-            <span className="hidden sm:inline">Fresh Daily</span>
-          </div>
-        </div> */}
-      </div>
-
-      {/* Main Hero Content */}
-      <div className="relative z-10 pt-16 md:pt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="relative w-full">
+      <div 
+        className="relative"
+        style={{ height: `${products.length * 100}vh` }}
+      >
+        {/* Fixed Background */}
+        <div className="fixed inset-0 bg-black overflow-hidden" style={{ 
+          zIndex: 1,
+          opacity: scrollY < (products.length * window.innerHeight) ? 1 : 0,
+          transition: 'opacity 0.5s ease'
+        }}>
           
-          {/* Brand Title */}
-          <div ref={titleRef} className={`text-center mb-12 md:mb-20 transition-all duration-1000 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}>
-            <div className="w-20 md:w-32 h-px bg-[#6f837a] shadow-[0_0_10px_#6f837a] mx-auto mb-4 md:mb-6"></div>
-            <h1 className="text-4xl md:text-6xl font-black text-white mb-4">
-              Bubble Tea
-              <span className="block text-[#6f837a] drop-shadow-[0_0_20px_#6f837a] animate-pulse">
-                Paradise
-              </span>
-            </h1>
+          {/* Floating Tapioca Pearls */}
+          {bubblePositions.map((bubble, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full bg-white"
+              style={{
+                width: `${bubble.size}px`,
+                height: `${bubble.size}px`,
+                left: `${bubble.x}%`,
+                top: `${bubble.y}%`,
+                transform: `translateY(${Math.sin(scrollY * bubble.speed * 0.01 + i) * 40}px)`,
+                opacity: 0.1 + Math.sin(scrollY * 0.005 + i) * 0.05,
+                transition: 'opacity 0.8s ease'
+              }}
+            />
+          ))}
+
+          {/* Accent Colored Bubbles */}
+          {[...Array(12)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                width: `${15 + i * 4}px`,
+                height: `${15 + i * 4}px`,
+                backgroundColor: '#6c8077',
+                left: `${10 + i * 7}%`,
+                top: `${15 + (i % 4) * 20}%`,
+                transform: `translateY(${Math.sin(scrollY * 0.006 + i * 1.5) * 50}px) scale(${0.8 + sectionProgress * 0.3})`,
+                opacity: 0.15 + Math.sin(scrollY * 0.004 + i) * 0.1,
+                transition: 'all 0.5s ease'
+              }}
+            />
+          ))}
+
+          {/* Liquid Flow Effect */}
+          <div className="absolute inset-0 opacity-20">
+            <svg className="w-full h-full" viewBox="0 0 1200 800">
+              <defs>
+                <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#6c8077" stopOpacity="0.3" />
+                  <stop offset="50%" stopColor="white" stopOpacity="0.1" />
+                  <stop offset="100%" stopColor="#6c8077" stopOpacity="0.2" />
+                </linearGradient>
+              </defs>
+              <path
+                d={`M0,300 Q300,${250 + Math.sin(scrollY * 0.01) * 80} 600,300 T1200,300 L1200,800 L0,800 Z`}
+                fill="url(#flowGradient)"
+              />
+              <path
+                d={`M0,500 Q400,${400 + Math.sin(scrollY * 0.008) * 60} 800,500 T1200,500 L1200,800 L0,800 Z`}
+                fill="white"
+                opacity="0.05"
+              />
+            </svg>
           </div>
+        </div>
 
-          {/* Main Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 lg:gap-16 items-center">
+        {/* Fixed Content */}
+        <div className="fixed inset-0 z-20 text-white" style={{ 
+          opacity: scrollY < (products.length * window.innerHeight) ? 1 : 0,
+          transition: 'opacity 0.5s ease'
+        }}>
+          {/* Centered Product Showcase */}
+          <div className="flex flex-col items-center justify-center h-full px-8">
             
-            {/* LEFT CARDS - Hidden on mobile, shows on lg+ */}
-            <div className="hidden lg:block lg:col-span-3 space-y-6 xl:space-y-10">
-              <div className="space-y-6 xl:space-y-8">
-                {drinkCategories.slice(0, 2).map((category, index) => {
-                  const IconComponent = category.icon;
-                  return (
-                    <div 
-                      key={index}
-                      ref={el => leftCardsRef.current[index] = el}
-                      className="group cursor-pointer opacity-0 -translate-x-20 rotate-[-5deg] scale-95"
-                    >
-                      <div className="relative p-4 xl:p-6 rounded-2xl bg-gray-900/80 backdrop-blur-sm hover:bg-gray-800/90 transition-all duration-500 border border-gray-700/50 hover:border-[#6f837a]/50 shadow-lg hover:shadow-[#6f837a]/20 hover:shadow-xl group-hover:scale-105 group-hover:-translate-y-2">
-                        {/* Neon glow effect */}
-                        <div className="absolute inset-0 rounded-2xl bg-[#6f837a]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        
-                        <div className="flex items-start space-x-3 xl:space-x-5 relative z-10">
-                          <div className="w-10 h-10 xl:w-12 xl:h-12 bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl flex items-center justify-center group-hover:from-[#6f837a]/20 group-hover:to-[#6f837a]/10 transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_15px_#6f837a] border border-gray-600 group-hover:border-[#6f837a]/50">
-                            <IconComponent className="w-5 h-5 xl:w-6 xl:h-6 text-gray-300 group-hover:text-[#6f837a] transition-colors duration-500" />
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-bold text-base xl:text-lg text-white group-hover:text-[#6f837a] transition-colors duration-300 mb-2">
-                              {category.title}
-                            </h4>
-                            <p className="text-xs xl:text-sm text-gray-400 mb-3 leading-relaxed">{category.subtitle}</p>
-                            <div className="flex flex-wrap gap-1 mb-3">
-                              {category.specialties.slice(0, 2).map((specialty, idx) => (
-                                <span key={idx} className="text-xs bg-gray-800 text-gray-300 px-2 py-1 rounded-full border border-gray-600 group-hover:border-[#6f837a]/50 group-hover:text-[#6f837a] transition-all duration-300">
-                                  {specialty}
-                                </span>
-                              ))}
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-[#6f837a] font-bold text-base xl:text-lg drop-shadow-[0_0_8px_#6f837a]">{category.stats.value}</span>
-                              <ArrowRight className="w-3 h-3 xl:w-4 xl:h-4 text-gray-500 group-hover:text-[#6f837a] group-hover:translate-x-2 transition-all duration-300" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* CENTER - 3D BUBBLE TEA */}
-            <div className="lg:col-span-6 flex justify-center relative order-first lg:order-none">
-              <div className="relative">
-                {/* Neon backdrop glow */}
-                <div className="absolute inset-0 bg-gradient-radial from-[#6f837a]/30 via-[#6f837a]/10 to-transparent rounded-full scale-150 blur-3xl animate-pulse"></div>
-                
-                {/* Main 3D Bubble Tea - Using img with proper attributes */}
+            {/* Large Central Product Image */}
+            <div className="relative mb-6">
+              <div 
+                className="relative transition-all duration-1200 ease-in-out"
+                style={{ 
+                  transform: `scale(${imageScale}) translateY(${imageY}px)`,
+                  opacity: isTransitioning ? 0.7 : 1,
+                  filter: isTransitioning ? 'blur(3px)' : 'blur(0px)'
+                }}
+              >
                 <img 
-                 
-                  src="/images/1.png"
-                  alt="Premium Bubble Tea 3D"
-                  width={520}
-                  height={750}
-                  className="w-[280px] h-[400px] sm:w-[350px] sm:h-[500px] md:w-[420px] md:h-[600px] lg:w-[520px] lg:h-[750px] object-contain mx-auto filter drop-shadow-[0_0_30px_#6f837a] relative z-10"
+                  src={product.productImage} 
+                  alt={product.name}
+                  className="w-72 h-80 lg:w-80 lg:h-96 object-contain drop-shadow-2xl"
                 />
                 
-                {/* Orbiting tapioca pearls */}
-                <div className="absolute inset-0 animate-spin-slow">
-                  <div className="absolute top-20 left-20 w-4 h-4 bg-black rounded-full shadow-[0_0_10px_#6f837a] border border-[#6f837a]/50"></div>
-                </div>
-                <div className="absolute inset-0 animate-reverse-spin">
-                  <div className="absolute bottom-32 right-32 w-3 h-3 bg-black rounded-full shadow-[0_0_8px_#6f837a] border border-[#6f837a]/50"></div>
+                {/* Glow Effect */}
+                <div 
+                  className="absolute inset-0 rounded-3xl transition-all duration-1200 ease-in-out"
+                  style={{ 
+                    background: `radial-gradient(ellipse at center, #6c807730 0%, transparent 70%)`,
+                    opacity: isTransitioning ? 0.2 : 0.3,
+                    transform: `scale(${1.2 + sectionProgress * 0.1})`,
+                    filter: 'blur(20px)'
+                  }}
+                />
+              </div>
+
+              {/* Orbiting Elements */}
+              <div 
+                className="absolute w-6 h-6 rounded-full bg-white"
+                style={{ 
+                  top: '15%',
+                  right: '-8%',
+                  transform: `rotate(${scrollY * 0.4}deg) translateX(80px) rotate(${-scrollY * 0.4}deg)`,
+                  opacity: isTransitioning ? 0.2 : 0.6
+                }}
+              />
+              <div 
+                className="absolute w-4 h-4 rounded-full"
+                style={{ 
+                  backgroundColor: '#6c8077',
+                  bottom: '25%',
+                  left: '-6%',
+                  transform: `rotate(${-scrollY * 0.6}deg) translateX(70px) rotate(${scrollY * 0.6}deg)`,
+                  opacity: isTransitioning ? 0.1 : 0.5
+                }}
+              />
+            </div>
+
+            {/* Product Information */}
+            <div className="text-center space-y-3 max-w-2xl">
+              <div className="space-y-2">
+                <div className="text-xs uppercase tracking-[0.4em] text-gray-500">
+                  {String(currentProduct + 1).padStart(2, '0')} / {String(products.length).padStart(2, '0')}
                 </div>
                 
-                {/* Liquid splash effects around drink */}
-                <div className="absolute top-1/4 -left-8 opacity-60">
-                  <div className="w-6 h-6 bg-[#6f837a] rounded-full blur-sm animate-bounce shadow-[0_0_15px_#6f837a]"></div>
-                </div>
-                <div className="absolute bottom-1/3 -right-8 opacity-50">
-                  <div className="w-4 h-4 bg-[#6f837a] rounded-full blur-sm animate-bounce shadow-[0_0_12px_#6f837a]" style={{animationDelay: '0.5s'}}></div>
-                </div>
+                <h1 
+                  className={`text-4xl lg:text-5xl font-black leading-none tracking-tight transition-all duration-1200 ease-in-out ${
+                    isTransitioning ? 'opacity-0 transform translate-y-3' : 'opacity-100 transform translate-y-0'
+                  }`}
+                  style={{ color: '#6c8077' }}
+                >
+                  {product.name}
+                </h1>
+                
+                <h2 className={`text-lg lg:text-xl font-light text-gray-300 transition-all duration-1200 ease-in-out delay-100 ${
+                  isTransitioning ? 'opacity-0 transform translate-y-3' : 'opacity-100 transform translate-y-0'
+                }`}>
+                  {product.subtitle}
+                </h2>
+              </div>
+
+              <p className={`text-sm text-gray-400 leading-relaxed transition-all duration-1200 ease-in-out delay-200 ${
+                isTransitioning ? 'opacity-0 transform translate-y-3' : 'opacity-100 transform translate-y-0'
+              }`}>
+                {product.description}
+              </p>
+
+              <div className={`flex justify-center space-x-4 pt-3 pb-16 transition-all duration-1200 ease-in-out delay-300 ${
+                isTransitioning ? 'opacity-0 transform translate-y-3' : 'opacity-100 transform translate-y-0'
+              }`}>
+                <button 
+                  className="px-6 py-2 text-sm font-semibold tracking-wider rounded-full transition-all duration-300 transform hover:scale-105"
+                  style={{ backgroundColor: '#6c8077', color: 'white' }}
+                >
+                  TASTE NOW
+                </button>
+                <button className="border border-white px-6 py-2 text-sm font-semibold tracking-wider rounded-full hover:bg-white hover:text-black transition-all duration-300">
+                  EXPLORE
+                </button>
               </div>
             </div>
 
-            {/* RIGHT CARDS - Hidden on mobile, shows on lg+ */}
-            <div className="hidden lg:block lg:col-span-3 space-y-6 xl:space-y-10">
-              <div className="space-y-6 xl:space-y-8">
-                {drinkCategories.slice(2, 4).map((category, index) => {
-                  const IconComponent = category.icon;
-                  return (
-                    <div 
-                      key={index}
-                      ref={el => rightCardsRef.current[index] = el}
-                      className="group cursor-pointer opacity-0 translate-x-20 rotate-[5deg] scale-95"
-                    >
-                      <div className="relative p-4 xl:p-6 rounded-2xl bg-gray-900/80 backdrop-blur-sm hover:bg-gray-800/90 transition-all duration-500 border border-gray-700/50 hover:border-[#6f837a]/50 shadow-lg hover:shadow-[#6f837a]/20 hover:shadow-xl group-hover:scale-105 group-hover:-translate-y-2">
-                        {/* Neon glow effect */}
-                        <div className="absolute inset-0 rounded-2xl bg-[#6f837a]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        
-                        <div className="flex items-start space-x-3 xl:space-x-5 relative z-10">
-                          <div className="w-10 h-10 xl:w-12 xl:h-12 bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl flex items-center justify-center group-hover:from-[#6f837a]/20 group-hover:to-[#6f837a]/10 transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_15px_#6f837a] border border-gray-600 group-hover:border-[#6f837a]/50">
-                            <IconComponent className="w-5 h-5 xl:w-6 xl:h-6 text-gray-300 group-hover:text-[#6f837a] transition-colors duration-500" />
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-bold text-base xl:text-lg text-white group-hover:text-[#6f837a] transition-colors duration-300 mb-2">
-                              {category.title}
-                            </h4>
-                            <p className="text-xs xl:text-sm text-gray-400 mb-3 leading-relaxed">{category.subtitle}</p>
-                            <div className="flex flex-wrap gap-1 mb-3">
-                              {category.specialties.slice(0, 3).map((specialty, idx) => (
-                                <span key={idx} className="text-xs bg-gray-800 text-gray-300 px-2 py-1 rounded-full border border-gray-600 group-hover:border-[#6f837a]/50 group-hover:text-[#6f837a] transition-all duration-300">
-                                  {specialty}
-                                </span>
-                              ))}
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-[#6f837a] font-bold text-base xl:text-lg drop-shadow-[0_0_8px_#6f837a]">{category.stats.value}</span>
-                              <ArrowRight className="w-3 h-3 xl:w-4 xl:h-4 text-gray-500 group-hover:text-[#6f837a] group-hover:translate-x-2 transition-all duration-300" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+            {/* Floating Stats */}
+            <div className="absolute top-1/3 left-6 lg:left-12">
+              <div 
+                className="bg-black bg-opacity-70 backdrop-blur-sm rounded-xl p-4 border transition-all duration-1200"
+                style={{ 
+                  transform: `translateY(${-imageY * 0.2}px)`,
+                  opacity: isTransitioning ? 0.3 : 0.8,
+                  borderColor: '#6c807730'
+                }}
+              >
+                <div className="text-2xl font-bold" style={{ color: '#6c8077' }}>280</div>
+                <div className="text-xs text-gray-400 uppercase">Calories</div>
               </div>
             </div>
-          </div>
 
-          {/* Mobile Cards - Shows only on mobile/tablet */}
-          <div className="lg:hidden mt-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              {drinkCategories.map((category, index) => {
-                const IconComponent = category.icon;
-                return (
-                  <div 
+            <div className="absolute top-1/2 right-6 lg:right-12">
+              <div 
+                className="bg-black bg-opacity-70 backdrop-blur-sm rounded-xl p-4 border transition-all duration-1200"
+                style={{ 
+                  transform: `translateY(${imageY * 0.3}px)`,
+                  opacity: isTransitioning ? 0.3 : 0.8,
+                  borderColor: '#6c807730'
+                }}
+              >
+                <div className="text-2xl font-bold text-white">0g</div>
+                <div className="text-xs text-gray-400 uppercase">Added Sugar</div>
+              </div>
+            </div>
+
+            {/* Bottom Progress */}
+            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center">
+              <div className="flex justify-center space-x-2 mb-4">
+                {products.map((_, index) => (
+                  <div
                     key={index}
-                    ref={el => mobileCardsRef.current[index] = el}
-                    className="group cursor-pointer opacity-0 translate-y-8 scale-95"
-                  >
-                    <div className="relative p-4 md:p-6 rounded-2xl bg-gray-900/80 backdrop-blur-sm hover:bg-gray-800/90 transition-all duration-500 border border-gray-700/50 hover:border-[#6f837a]/50 shadow-lg hover:shadow-[#6f837a]/20 hover:shadow-xl group-hover:scale-105 group-hover:-translate-y-2">
-                      {/* Neon glow effect */}
-                      <div className="absolute inset-0 rounded-2xl bg-[#6f837a]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                      
-                      <div className="flex items-start space-x-4 relative z-10">
-                        <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl flex items-center justify-center group-hover:from-[#6f837a]/20 group-hover:to-[#6f837a]/10 transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_15px_#6f837a] border border-gray-600 group-hover:border-[#6f837a]/50 flex-shrink-0">
-                          <IconComponent className="w-5 h-5 md:w-6 md:h-6 text-gray-300 group-hover:text-[#6f837a] transition-colors duration-500" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-bold text-sm md:text-lg text-white group-hover:text-[#6f837a] transition-colors duration-300 mb-1 md:mb-2">
-                            {category.title}
-                          </h4>
-                          <p className="text-xs md:text-sm text-gray-400 mb-3 leading-relaxed">{category.subtitle}</p>
-                          <div className="flex flex-wrap gap-1 mb-3">
-                            {category.specialties.slice(0, 2).map((specialty, idx) => (
-                              <span key={idx} className="text-xs bg-gray-800 text-gray-300 px-2 py-1 rounded-full border border-gray-600 group-hover:border-[#6f837a]/50 group-hover:text-[#6f837a] transition-all duration-300">
-                                {specialty}
-                              </span>
-                            ))}
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-[#6f837a] font-bold text-sm md:text-lg drop-shadow-[0_0_8px_#6f837a]">{category.stats.value}</span>
-                            <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-[#6f837a] group-hover:translate-x-2 transition-all duration-300" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Testimonial */}
-          <div ref={testimonialRef} className={`mt-16 md:mt-20 transition-all duration-1000 delay-1000 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}>
-            <div className="text-center max-w-2xl mx-auto">
-              <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-xl mx-4 md:mx-0 border border-gray-700/50 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[#6f837a]/5 opacity-50"></div>
-                <div className="relative z-10">
-                  <div className="flex justify-center mb-4">
-                    <div className="flex space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <div key={i} className="w-4 h-4 md:w-5 md:h-5 text-[#6f837a] text-base md:text-lg drop-shadow-[0_0_5px_#6f837a]">★</div>
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-sm md:text-lg text-gray-200 italic mb-4 leading-relaxed">
-                    &ldquo;The bubble tea here is absolutely incredible! Fresh ingredients, perfect sweetness, and the tapioca pearls have the perfect chewy texture. It&apos;s become my daily obsession!&rdquo;
-                  </p>
-                  <div className="flex items-center justify-center space-x-3">
-                    <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-800 rounded-full flex items-center justify-center border border-[#6f837a]/50 shadow-[0_0_8px_#6f837a]">
-                      <span className="text-[#6f837a] font-bold text-xs md:text-sm">SA</span>
-                    </div>
-                    <div>
-                      <p className="font-bold text-sm md:text-base text-white">Sarah Anderson</p>
-                      <p className="text-xs md:text-sm text-gray-400">Bubble Tea Enthusiast</p>
-                    </div>
-                  </div>
-                </div>
+                    className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                      index === currentProduct 
+                        ? 'scale-150 opacity-100' 
+                        : 'scale-100 opacity-30'
+                    }`}
+                    style={{ 
+                      backgroundColor: index === currentProduct ? '#6c8077' : 'white'
+                    }}
+                  />
+                ))}
               </div>
-            </div>
-          </div>
 
-          {/* CTA Section */}
-          <div ref={ctaRef} className={`text-center mt-16 md:mt-20 pb-16 md:pb-20 transition-all duration-1000 delay-1200 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}>
-            <div className="space-y-4 md:space-y-6 px-4">
-              <button className="group relative bg-gradient-to-r from-gray-800 to-gray-700 text-white px-8 md:px-16 py-4 md:py-5 rounded-full text-base md:text-xl font-bold hover:from-gray-700 hover:to-gray-600 transition-all duration-700 transform hover:scale-105 shadow-xl hover:shadow-[#6f837a]/40 hover:shadow-2xl overflow-hidden border-2 border-[#6f837a]/50 hover:border-[#6f837a]">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#6f837a]/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                <div className="absolute inset-0 bg-[#6f837a]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <span className="relative drop-shadow-[0_0_8px_#6f837a] group-hover:text-[#6f837a]">Order Your Perfect Drink</span>
-              </button>
-              
-              <p className="text-gray-300 text-base md:text-lg font-semibold">Crafted fresh daily with premium ingredients</p>
-              
-              <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-6 md:space-x-8 text-xs md:text-sm text-gray-400 font-medium mt-4">
-                <span className="flex items-center"><span className="text-[#6f837a] mr-2">🧋</span>50+ Flavors</span>
-                <span className="flex items-center"><span className="text-[#6f837a] mr-2">✨</span>Fresh Daily</span>
-                <span className="flex items-center"><span className="text-[#6f837a] mr-2">🎯</span>Custom Made</span>
+              <div className="text-xs uppercase tracking-wide text-gray-500 mb-3">
+                Scroll to explore
+              </div>
+              <div className="w-px h-8 bg-gray-600 mx-auto relative">
+                <div 
+                  className="absolute w-px transition-all duration-300"
+                  style={{ 
+                    height: `${(currentProduct + 1) / products.length * 100}%`,
+                    backgroundColor: '#6c8077'
+                  }}
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .bg-gradient-radial {
-          background: radial-gradient(circle, var(--tw-gradient-stops));
-        }
-        
-        @keyframes float {
-          0%, 100% { 
-            transform: translateY(0px) rotate(0deg); 
-          }
-          50% { 
-            transform: translateY(-15px) rotate(2deg); 
-          }
-        }
-        
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
-        @keyframes reverse-spin {
-          from { transform: rotate(360deg); }
-          to { transform: rotate(0deg); }
-        }
-        
-        .animate-reverse-spin {
-          animation: reverse-spin 15s linear infinite;
-        }
-      `}</style>
+      
+   
     </div>
   );
 };
-export default BubbleTeaHero;
+
+export default RefreshingBubbleTeaScroll;

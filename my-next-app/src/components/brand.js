@@ -137,7 +137,7 @@ const TRepublikBrandStory = () => {
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [brandValues.length]); // Fixed: Added missing dependency
+  }, [brandValues.length]);
 
   // Floating animations
   useEffect(() => {
@@ -154,6 +154,23 @@ const TRepublikBrandStory = () => {
 
   return (
     <section ref={sectionRef} className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 relative overflow-hidden py-20">
+      
+      {/* PNG Splash Images */}
+      <div className="absolute top-0 left-0 z-5 opacity-60">
+        <img 
+          src="/images/13.png" 
+          alt="Splash decoration"
+          className="w-[200px] h-[250px] md:w-[280px] md:h-[350px] object-contain filter drop-shadow-[0_0_20px_rgba(111,131,122,0.3)]"
+        />
+      </div>
+      
+      <div className="absolute bottom-0 right-0 z-5 opacity-60">
+        <img 
+          src="/images/9.png" 
+          alt="Splash decoration"
+          className="w-[200px] h-[250px] md:w-[280px] md:h-[350px] object-contain filter drop-shadow-[0_0_20px_rgba(122,111,131,0.3)]"
+        />
+      </div>
       
       {/* Neon glowing particles */}
       <div className="absolute inset-0 overflow-hidden">
@@ -319,11 +336,7 @@ const TRepublikBrandStory = () => {
                 ref={rightImageRef}
                 className="relative opacity-0 translate-x-20 rotate-[10deg] scale-90"
               >
-                <img 
-                  src="/images/2.png"
-                  alt="T-Republik Community Experience"
-                  className="w-[280px] h-[400px] sm:w-[320px] sm:h-[450px] object-contain filter drop-shadow-[0_0_30px_#7a6f83]"
-                />
+              
                 
                 {/* Floating elements */}
                 <div className="absolute -top-4 -left-4 w-8 h-8 bg-[#7a6f83] rounded-full shadow-[0_0_15px_#7a6f83] animate-bounce" style={{animationDelay: '0.3s'}}></div>
