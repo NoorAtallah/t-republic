@@ -6,6 +6,7 @@ const RefreshingBubbleTeaScroll = () => {
   const [scrollY, setScrollY] = useState(0);
   const [currentProduct, setCurrentProduct] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [windowHeight, setWindowHeight] = useState(1000); // Default fallback
 
   const products = [
     {
@@ -31,12 +32,28 @@ const RefreshingBubbleTeaScroll = () => {
     }
   ];
 
+  // Set window height after component mounts
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setWindowHeight(window.innerHeight);
+      
+      const handleResize = () => {
+        setWindowHeight(window.innerHeight);
+      };
+      
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
   useEffect(() => {
     const handleScroll = () => {
+      if (typeof window === 'undefined') return;
+      
       const newScrollY = window.scrollY;
       setScrollY(newScrollY);
       
-      const sectionHeight = typeof window !== 'undefined' ? window.innerHeight : 1000;
+      const sectionHeight = windowHeight;
       const newProductIndex = Math.min(
         Math.floor(newScrollY / sectionHeight),
         products.length - 1
@@ -49,11 +66,13 @@ const RefreshingBubbleTeaScroll = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [currentProduct, products.length]);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [currentProduct, products.length, windowHeight]);
 
-  const sectionHeight = window.innerHeight;
+  const sectionHeight = windowHeight;
   const sectionProgress = (scrollY % sectionHeight) / sectionHeight;
   
   const bubblePositions = Array.from({ length: 20 }, (_, i) => ({
@@ -76,7 +95,7 @@ const RefreshingBubbleTeaScroll = () => {
         {/* Fixed Background */}
         <div className="fixed inset-0 bg-black overflow-hidden" style={{ 
           zIndex: 1,
-          opacity: scrollY < (products.length * (typeof window !== 'undefined' ? window.innerHeight : 1000)),
+          opacity: scrollY < (products.length * windowHeight) ? 1 : 0,
           transition: 'opacity 0.5s ease'
         }}>
           
@@ -140,7 +159,7 @@ const RefreshingBubbleTeaScroll = () => {
 
         {/* Fixed Content */}
         <div className="fixed inset-0 z-20 text-white" style={{ 
-          opacity: scrollY < (products.length * window.innerHeight) ? 1 : 0,
+          opacity: scrollY < (products.length * windowHeight) ? 1 : 0,
           transition: 'opacity 0.5s ease'
         }}>
           {/* Centered Product Showcase */}
@@ -303,8 +322,6 @@ const RefreshingBubbleTeaScroll = () => {
           </div>
         </div>
       </div>
-      
-   
     </div>
   );
 };
