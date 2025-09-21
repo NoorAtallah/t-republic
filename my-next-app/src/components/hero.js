@@ -36,7 +36,7 @@ const RefreshingBubbleTeaScroll = () => {
       const newScrollY = window.scrollY;
       setScrollY(newScrollY);
       
-      const sectionHeight = window.innerHeight;
+      const sectionHeight = typeof window !== 'undefined' ? window.innerHeight : 1000;
       const newProductIndex = Math.min(
         Math.floor(newScrollY / sectionHeight),
         products.length - 1
@@ -76,7 +76,7 @@ const RefreshingBubbleTeaScroll = () => {
         {/* Fixed Background */}
         <div className="fixed inset-0 bg-black overflow-hidden" style={{ 
           zIndex: 1,
-          opacity: scrollY < (products.length * window.innerHeight) ? 1 : 0,
+          opacity: scrollY < (products.length * (typeof window !== 'undefined' ? window.innerHeight : 1000)),
           transition: 'opacity 0.5s ease'
         }}>
           
